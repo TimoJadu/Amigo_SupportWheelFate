@@ -1,0 +1,583 @@
+﻿
+<html ng-app="testApp">
+<head>
+    <title>Async Service & Events</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <style>
+    #main {
+            width: 1000px;
+        }
+
+        #left-column {
+            float: left;
+            width: 600px;
+            padding-right: 15px;
+        }
+
+        #right-column {
+            float: right;
+            width: 300px;
+        }
+
+        .participants {
+            list-style: none;
+        }
+
+            .participants li {
+                border-radius: 15px;
+                padding: 15px;
+                font-family: 'Carter One', arial, serif;
+                font-size: 150%;
+                text-shadow: 2px 2px 2px #000;
+            }
+
+                .participants li:nth-child(2n+1) {
+                    background-color: #bada55;
+                }
+
+        .winner {
+            font-family: 'Carter One', arial, serif;
+            font-size: 250%;
+            text-shadow: 2px 2px 2px #000;
+            display: none;
+        }
+
+            .winner:before {
+                content: "The selected employee is ... ";
+            }
+
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th {
+            background-color: blue;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    
+    </style>
+</head>
+<body ng-controller="testController">
+    <div style="width:100%">
+        <table style="width:100%">
+            <tr><td width="34%">
+            <div id="main">
+                <div id="left-column">
+                    <form class="iform" action="#" method="get">
+                        <label for="joiner"></label>
+                        <input id="joiner" name="joiner" class="joiner" placeholder="Please Enter employee names" />
+                        <button class="add">Add</button>
+                        <button class="spin-trigger">Spin</button>
+                    </form>
+                    <p>Please Enter employee names upto 10</p>
+                    <canvas class="canvas" width="500" height="500"></canvas>
+                </div>
+                </td>
+            <td width="33%">
+                <div id="right-column">
+                    <p class="winner">The Selected employee is ... <span>&nbsp;</span></p>
+                    <ul class="participants"></ul>
+                </div>
+                <div style="clear:both"></div>
+                </td>
+                <td width="33%">
+                    <h2>Async Service & Events</h2>
+                    <p>Selected 1st Employee: </p><input type="text" ng-model="X" id="txtFirstEmployee" />
+                    <br />
+                    <!--<p>Selected 2nd Employee: </p>-->
+                    <input type="text" ng-model="Y" id="txt2ndEmployee" hidden="hidden" />
+
+                    <div>
+                        <br />
+                        <div> Duty Type: </div>
+                        <br />
+                        <select id="ddShift">
+                            <option value="Full">Full Day Support</option>
+                            <option value="Half">Half Day Support</option>
+                        </select>
+                        <br />
+                        <div> Duty Date: </div>
+                        <br />
+                        <input type="text" id="txtDate" value="09/22/2018" />
+                        <!--<input type="button" id="btnTrigger" ng-click="Trigger()" value=" Push " />-->
+                        <!--<input type="button" ng-click="Start()" value="   Push  " />-->
+                        <button ng-click="getRequest()">   Push   </button>
+
+                    </div>
+
+                    <br />
+                    <button ng-click="Reset()">Clear all</button>
+                    <br />
+                </td></tr>
+                <tr>
+                    
+                    <td align="left" valign="top" width="40%">
+                        <p style="color:green"> Finalized Duty Table </p>
+                        <table id="tblDuty" ng-model="tableContentDetails">
+                            <tr><th>Date</th><th>Employee Name</th><th>Shift Type</th><th>Message</th></tr>
+                            <tr ng-repeat="n in range(1,tableContentDetails.length)"><td ng-repeat="i in range(1,tableContentDetails[n-1].length)">{{tableContentDetails[n-1][i-1]}}</td></tr>
+                        </table>
+                    </td>
+                    <td align="left" valign="top" width="30%" colspan="2">
+                        <p style="color: red"> Error Log </p>
+                        <table id="tblError" ng-model="tableContentDetailsF">
+                            <tr><th>Date</th><th>Employee Name</th><th>Shift Type</th><th>Error Message</th></tr>
+                            <tr ng-repeat="n in range(1,tableContentDetailsF.length)"><td ng-repeat="i in range(1,tableContentDetailsF[n-1].length)">{{tableContentDetailsF[n-1][i-1]}}</td></tr>
+                        </table>
+                    </td>
+                </tr>
+        </table>
+    </div>
+    </div>
+
+
+
+
+    <!--<table id="tblGrid">
+        <tr><th>Serial No</th><th ng-repeat="m in range(1,Y)">Column {{m}}</th><th>Row Total</th></tr>
+        <tr ng-repeat="n in range(1,X)">
+            <td>{{n}}</td>
+            <td ng-repeat="m in range(1,Y)"><input type="text" id="cell{{n}}+{{m}}" /></td>
+            <td><input type="text" id="row{{n}}" /></td>
+        </tr>
+
+        <tr>
+            <td>Column Total</td>
+            <td ng-repeat="m in range(1,Y)"><input type="text" id="col{{m}}" /></td>
+            <td><input type="text" id="sumallCells" /></td>
+        </tr>
+    </table>-->
+    <!--<table id="tblDuty" ng-model="tableContentDetails">
+        <tr><th>Date</th><th>Employee Name</th><th>Shift Type</th></tr>
+        <tr ng-repeat="n in range(1,tableContentDetails.length)"><td ng-repeat="i in range(1,tableContentDetails[n-1].length)">{{tableContentDetails[n-1][i-1]}}</td></tr>
+    </table>-->
+
+
+    <input type="text" ng-model="GeneratorNumber" hidden="hidden" />
+
+    <!--<button ng-click="getRequest()" >Test Rest</button>-->
+    <!--<p hidden="hidden"> {{ response }}</p>-->
+
+
+    <!--<button onclick="refreshFunction()" id="btnTimer" hidden="hidden">Timer</button>-->
+
+
+
+    <script>
+        var cellArray = [];
+        var tempcellArray = [];
+        var cellValueArray = [];
+        var X = 0;
+        var Y = 0;
+        var FullTableContentSuccess = [];
+        var TableContent = [];
+
+        var FullTableContentFailure = [];
+        
+
+        var testApp = angular.module('testApp', []);
+
+        testApp.controller('testController', function ($scope, $http) {
+            $scope.home = "This is the homepage";
+
+
+            //    Our GET request function
+
+            $scope.getRequest = function () {
+                console.log("I've been pressed!");
+                //var urlString = "http://localhost:52557/api/API/Validate?date" + $("#txtDate")[0].value + "&employeeName=" + selectedEmployee + "&shiftType=" + $("#ddShift").attr('selected', 'selected')[0].value;
+                var urlString = "http://localhost:28520/api/API/Validate?date=" + $("#txtDate")[0].value + "&employeeName=" + $("#txtFirstEmployee")[0].value + "&shiftType=" + $("#ddShift").attr('selected', 'selected')[0].value;
+                $http.get(urlString)
+                .then(function successCallback(response) {
+                    $scope.response = response.data;
+                    alert($scope.response);
+                    if (response.data.status==true) {
+                        //$scope.tableContentDetails = $("#txtDate")[0].value;
+                        var TableContent = [];
+                        TableContent[0] = ($("#txtDate")[0].value);
+                        TableContent[1] = ($("#txtFirstEmployee")[0].value);
+                        TableContent[2] = $("#ddShift").attr('selected', 'selected')[0].value;
+                        TableContent[3] = "Success";
+
+                        FullTableContentSuccess.push(TableContent);
+                        $scope.tableContentDetails = FullTableContentSuccess;
+                    }
+                    else {
+                        var TableContent = [];
+                        TableContent[0] = ($("#txtDate")[0].value);
+                        TableContent[1] = ($("#txtFirstEmployee")[0].value);
+                        TableContent[2] = $("#ddShift").attr('selected', 'selected')[0].value;
+                        TableContent[3] = response.data.message;
+
+                        FullTableContentFailure.push(TableContent);
+                        $scope.tableContentDetailsF = FullTableContentFailure;
+                    }
+                }, function errorCallback(response) {
+                    console.log("Unable to perform get request");
+                });
+            };
+
+
+            $scope.Start = function () {
+                $("#tblGrid").show();
+                //X = $scope.X;
+                //Y = $scope.Y;
+
+                //for (var i = 1; i <= $scope.X; i++) {
+                //    for (var j = 1; j <= $scope.Y;j++) {
+                //        cellArray.push('cell' + i + '+' + j);
+                //    };
+                //};
+
+                //tempcellArray = cellArray.slice().reverse();
+                apiCall();
+            };
+
+            function apiCall(_key) {
+                $.ajax({
+                    method: "GET",
+                    url: "http://localhost:28520/api/API/Validate?date=" + $("#txtDate")[0].value + "&employeeName=" + $("#txtFirstEmployee")[0].value + "&shiftType=" + $("#ddShift").attr('selected', 'selected')[0].value,
+                    success: function (data) {
+                        //document.getElementById('cell' + i + '+' + j).value = response.replace(/"/g, "")
+                        console.log(data);
+                    },
+                    error: function (error_data) {
+                        console.log("error");
+                        console.log(error_data);
+                    }
+                });
+            };
+
+            $scope.range = function (min, max, step) {
+                step = step || 1;
+                var input = [];
+                for (var i = min; i <= max; i += step) {
+                    input.push(i);
+                }
+                return input;
+            };
+
+
+            $scope.Reset = function () {
+                $("input[type=text]").val("");
+                cellValueArray = [];
+                $scope.X = 0;
+                $scope.Y = 0;
+
+                window.location.reload(true);
+
+                //$("#txtFirstEmployee")[0].value = 0;
+                //$("#txt2ndEmployee")[0].value = 0;
+                //$("#sumallCells")[0].value = 0;
+                //$("#tblGrid").hide();
+
+                deleteInstanceApiCall();
+            };
+
+            function deleteInstanceApiCall() {
+                $.ajax({
+                    method: "GET",
+                    url: "http://localhost:28520/api/API/DeleteInstance",
+                    success: function (data) {
+                        //document.getElementById('cell' + i + '+' + j).value = response.replace(/"/g, "")
+                        console.log(data);
+                    },
+                    error: function (error_data) {
+                        console.log("error");
+                        console.log(error_data);
+                    }
+                });
+            };
+
+        });
+
+        //if (cellValueArray.length > 0)
+        //setInterval(function () { document.getElementById("btnTimer").click(); }, 1000);
+
+        //function refreshFunction() {
+        //    //alert("Hey");
+        //    for (var n = 0; n < cellArray.length; n++) {
+        //        if (cellValueArray.length - 1 >= n && cellValueArray.length > 0 && (document.getElementById(cellValueArray[n].key) != null)) {
+        //            document.getElementById(cellValueArray[n].key).value = cellValueArray[n].value;
+        //        }
+        //        else { break; }
+        //    };
+
+        //    rowTotal();
+        //    colTotal();
+        //    allTotal();
+        //};
+
+        //function rowTotal() {
+        //    for (var i = 1; i <= X; i++) {
+        //        var sum = 0;
+        //        for (var j = 1; j <= Y; j++) {
+        //            if (document.getElementById('cell' + i + '+' + j).value == "undefined" || document.getElementById('cell' + i + '+' + j).value == "") {
+        //                document.getElementById('cell' + i + '+' + j).value = 0;
+        //                continue;
+        //            }
+        //            else {
+        //                sum += parseInt(document.getElementById('cell' + i + '+' + j).value);
+        //            }
+        //        }
+        //        document.getElementById('row' + i).value = sum;
+        //    }
+        //};
+
+
+        //function colTotal() {
+        //    for (var j = 1; j <= Y; j++) {
+        //        var sum = 0;
+        //        for (var i = 1; i <= X; i++) {
+        //            if (document.getElementById('cell' + i + '+' + j).value == "undefined" || document.getElementById('cell' + i + '+' + j).value == "") {
+        //                document.getElementById('cell' + i + '+' + j).value = 0;
+        //                continue;
+        //            }
+        //            else {
+        //                sum += parseInt(document.getElementById('cell' + i + '+' + j).value);
+        //            }
+        //        }
+        //        document.getElementById('col' + j).value = sum;
+        //    }
+        //};
+
+        //function allTotal() {
+        //    var sum = 0;
+        //    for (var j = 1; j <= Y; j++) {
+        //        sum += parseInt(document.getElementById('col' + j).value);
+        //    }
+
+        //    document.getElementById('sumallCells').value = sum;
+        //}
+
+        ////Wheel in JS/////
+
+        var selectedEmployee;
+        var tableContent = [];
+        (function ($) {
+            $.fn.spinwheel = function (options, callback) {
+
+                var params = $.extend({}, $.fn.spinwheel.default_options, options), $that = $(this), ctx = null, colorCache = [],
+                startAngle = 0, arc = Math.PI / 6, spinTimeout = null, spinArcStart = 10, spinTime = 0, spinTimeTotal = 0, spinAngleStart = 0, pplArray = params.pplArray, pplLength = pplArray.length;
+
+                if ($.isFunction(options)) {
+                    callback = options;
+                    options = {};
+                }
+
+                var methods = {
+                    init: function () {
+                        methods.getContext();
+                        methods.setup();
+                        drawWheel();
+                    },
+                    setup: function () {
+                        $(params.spinTrigger).bind('click', function (e) {
+                            e.preventDefault();
+                            methods.spin();
+                        });
+
+                        $(params.addPplTrigger).bind('click', function (e) {
+                            e.preventDefault();
+                            var item = $('<li />').append($(params.joiner).val());
+                            $(params.paricipants).append(item);
+                            methods.updatePanel();
+                        });
+
+
+                    },
+                    getContext: function () {
+                        if (ctx !== null)
+                            return ctx;
+
+                        var canvas = $that[0];
+                        ctx = canvas.getContext("2d");
+                    },
+                    spin: function () {
+                        spinAngleStart = Math.random() * 10 + 10;
+                        spinTime = 0;
+                        spinTimeTotal = Math.random() * 3 + 4 * 1000;
+                        rotateWheel();
+                    },
+                    updatePanel: function () {
+                        var $ppl = $(params.paricipants).children();
+                        pplArray = [];
+                        $ppl.each(function (key, value) {
+                            pplArray.push(value.innerHTML);
+                        });
+                        arc = 2 * Math.PI / $ppl.length;
+                        pplLength = $ppl.length;
+                        drawWheel();
+                    }
+                }
+
+                function genHex() {
+                    var colors = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"], color = "", digit = [], i;
+
+                    for (i = 0; i < 6; i++) {
+                        digit[i] = colors[Math.round(Math.random() * 14)];
+                        color = color + digit[i];
+                    }
+
+                    if ($.inArray(color, colorCache) > -1) {
+                        genHex();
+                    } else {
+                        colorCache.push('#' + color);
+                        return '#' + color;
+                    }
+                }
+
+                var rotateWheel = function rotateWheel() {
+                    spinTime += 30;
+                    if (spinTime >= spinTimeTotal) {
+                        stopRotateWheel();
+                        return;
+                    }
+
+                    var spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
+                    startAngle += (spinAngle * Math.PI / 180);
+                    drawWheel();
+                    spinTimeout = setTimeout(rotateWheel, 30);
+                }
+
+                function stopRotateWheel() {
+                    clearTimeout(spinTimeout);
+                    var degrees = startAngle * 180 / Math.PI + 90;
+                    var arcd = arc * 180 / Math.PI;
+                    var index = Math.floor((360 - degrees % 360) / arcd);
+                    ctx.save();
+                    ctx.font = params.resultTextFont;
+                    var text = pplArray[index];
+                    alert(text);
+
+                    //if ($("#txtFirstEmployee")[0].value == "" && $("#txt2ndEmployee")[0].value == "") {
+                    //    $("#txtFirstEmployee")[0].value = text;
+                    //}
+                    //else if ($("#txt2ndEmployee")[0].value == "") {
+                    //    $("#txt2ndEmployee")[0].value = text;
+                    //}
+                    $("#txtFirstEmployee")[0].value = text;
+
+                    selectedEmployee = text;
+                    $(params.winnerDiv).html(text).show();
+                    //ctx.fillText(text, 250 - ctx.measureText(text).width / 2, 250 + 10);
+                    ctx.restore();
+                }
+
+                function drawArrow() {
+                    ctx.fillStyle = params.arrowColor;
+                    ctx.beginPath();
+                    ctx.moveTo(250 - 4, 250 - (params.outterRadius + 15));
+                    ctx.lineTo(250 + 4, 250 - (params.outterRadius + 15));
+                    ctx.lineTo(250 + 4, 250 - (params.outterRadius - 15));
+                    ctx.lineTo(250 + 9, 250 - (params.outterRadius - 15));
+                    ctx.lineTo(250 + 0, 250 - (params.outterRadius - 23));
+                    ctx.lineTo(250 - 9, 250 - (params.outterRadius - 15));
+                    ctx.lineTo(250 - 4, 250 - (params.outterRadius - 15));
+                    ctx.lineTo(250 - 4, 250 - (params.outterRadius + 15));
+                    ctx.fill();
+                }
+
+                function drawWheel() {
+                    ctx.strokeStyle = params.wheelBorderColor;
+                    ctx.lineWidth = params.wheelBorderWidth;
+                    ctx.font = params.wheelTextFont;
+                    ctx.clearRect(0, 0, 500, 500);
+                    var text = null, i = 0, totalJoiner = pplLength;
+                    for (i = 0; i < totalJoiner; i++) {
+                        text = pplArray[i];
+                        var angle = startAngle + i * arc;
+                        ctx.fillStyle = colorCache.length > totalJoiner ? colorCache[i] : genHex();
+
+                        ctx.beginPath();
+                        // ** arc(centerX, centerY, radius, startingAngle, endingAngle, antiClockwise);
+                        ctx.arc(250, 250, params.outterRadius, angle, angle + arc, false);
+                        ctx.arc(250, 250, params.innerRadius, angle + arc, angle, true);
+                        ctx.stroke();
+                        ctx.fill();
+
+                        ctx.save();
+                        ctx.shadowOffsetX = -1;
+                        ctx.shadowOffsetY = -1;
+                        ctx.shadowBlur = 1;
+                        ctx.shadowColor = params.wheelTextShadowColor;
+                        ctx.fillStyle = params.wheelTextColor;
+                        ctx.translate(250 + Math.cos(angle + arc / 2) * params.textRadius, 250 + Math.sin(angle + arc / 2) * params.textRadius);
+                        ctx.rotate(angle + arc / 2 + Math.PI / 2);
+
+                        ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+                        ctx.restore();
+                        ctx.closePath();
+                    }
+                    drawArrow();
+                }
+
+                function easeOut(t, b, c, d) {
+                    var ts = (t /= d) * t;
+                    var tc = ts * t;
+                    return b + c * (tc + -3 * ts + 3 * t);
+                }
+
+                methods.init.apply(this, []);
+            }
+
+            /*  ---  please look at the index.html source in order to understand what they do ---
+             *  outterRadius : the big circle border
+             *  innerRadius  : the inner circle border
+             *  textRadius   : How far the the text on the wheel locate from the center point
+             *  spinTrigger  : the element that trigger the spin action
+             *  wheelBorderColor : what is the wheel border color
+             *  wheelBorderWidth : what is the "thickness" of the border of the wheel
+             *  wheelTextFont : what is the style of the text on the wheel
+             *  wheelTextColor : what is the color of the tet on the wheel
+             *  wheelTextShadow : what is the shadow for the text on the wheel
+             *  resultTextFont : it is not being used currently
+             *  arrowColor : what is the color of the arrow on the top
+             *  participants : what is the container for participants for the wheel
+             *  joiner : usually a form input where user can put in their name
+             *  addPplTrigger : what element will trigger the add participant
+             *  winDiv : the element you want to display the winner
+             */
+            $.fn.spinwheel.default_options = {
+                outterRadius: 200, innerRadius: 3, textRadius: 160, spinTrigger: '.spin-trigger',
+                wheelBorderColor: 'black', wheelBorderWidth: 3, wheelTextFont: 'bold 15px sans-serif', wheelTextColor: 'black', wheelTextShadowColor: 'rgb(220,220,220)',
+                resultTextFont: 'bold 30px sans-serif', arrowColor: 'black', paricipants: '.participants', addPplTrigger: '.add', joiner: '.joiner', winnerDiv: '.winner'
+            }
+        })(jQuery);
+
+
+
+
+        var rowCount = 0;
+
+
+        $(document).ready(function () {
+            $('.canvas').spinwheel({
+                pplArray: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+            });
+
+            //$("#txtDate")[0].value = Date.now;
+        });
+        ///////////////////
+    </script>
+</body>
+
+
+
+
+
+</html>
