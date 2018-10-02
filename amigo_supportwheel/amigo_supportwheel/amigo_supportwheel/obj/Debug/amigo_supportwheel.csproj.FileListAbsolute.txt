@@ -88,5 +88,6 @@ S:\work\Amigo\Amigo_SupportWheelFate\amigo_supportwheel\amigo_supportwheel\amigo
 S:\work\Amigo\Amigo_SupportWheelFate\amigo_supportwheel\amigo_supportwheel\amigo_supportwheel\bin\Microsoft.Owin.Security.Twitter.xml
 S:\work\Amigo\Amigo_SupportWheelFate\amigo_supportwheel\amigo_supportwheel\amigo_supportwheel\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 S:\work\Amigo\Amigo_SupportWheelFate\amigo_supportwheel\amigo_supportwheel\amigo_supportwheel\bin\System.Web.Http.Owin.xml
+S:\work\Amigo\Amigo_SupportWheelFate\amigo_supportwheel\amigo_supportwheel\amigo_supportwheel\obj\Debug\amigo_supportwheel.csprojResolveAssemblyReference.cache
 S:\work\Amigo\Amigo_SupportWheelFate\amigo_supportwheel\amigo_supportwheel\amigo_supportwheel\obj\Debug\amigo_supportwheel.dll
 S:\work\Amigo\Amigo_SupportWheelFate\amigo_supportwheel\amigo_supportwheel\amigo_supportwheel\obj\Debug\amigo_supportwheel.pdb

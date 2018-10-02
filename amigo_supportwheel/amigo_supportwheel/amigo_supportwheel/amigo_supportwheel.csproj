@@ -292,6 +292,10 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\5bffc946-0ee0-4-231-b9ee - FTP %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\5bffc946-0ee0-4-231-b9ee - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\5bffc946-0ee0-4-231-b9ee - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\5bffc946-0ee0-4-231-b9ee - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

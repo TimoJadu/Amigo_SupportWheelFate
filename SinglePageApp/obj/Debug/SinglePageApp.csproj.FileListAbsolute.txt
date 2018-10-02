@@ -30,3 +30,4 @@ S:\work\Amigo\Amigo_SupportWheelFate\SinglePageApp\bin\Microsoft.ApplicationInsi
 S:\work\Amigo\Amigo_SupportWheelFate\SinglePageApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 S:\work\Amigo\Amigo_SupportWheelFate\SinglePageApp\obj\Debug\SinglePageApp.dll
 S:\work\Amigo\Amigo_SupportWheelFate\SinglePageApp\obj\Debug\SinglePageApp.pdb
+S:\work\Amigo\Amigo_SupportWheelFate\SinglePageApp\obj\Debug\SinglePageApp.csprojResolveAssemblyReference.cache

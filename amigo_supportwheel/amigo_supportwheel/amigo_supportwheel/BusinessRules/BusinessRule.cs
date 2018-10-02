@@ -66,6 +66,7 @@ namespace amigo_supportwheel.BusinessRules
                         empList.Add(employeeDetails);
                         dutyList.Add(_dateTime, empList);
                     }
+                    errorMessage = string.Empty;
                 }
                 else { errorMessage = fr.errorMessage; }
             }
