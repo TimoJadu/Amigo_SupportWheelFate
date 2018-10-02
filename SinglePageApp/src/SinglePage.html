@@ -200,7 +200,7 @@
             $scope.getRequest = function () {
                 console.log("I've been pressed!");
                 //var urlString = "http://localhost:52557/api/API/Validate?date" + $("#txtDate")[0].value + "&employeeName=" + selectedEmployee + "&shiftType=" + $("#ddShift").attr('selected', 'selected')[0].value;
-                var urlString = "http://localhost:28520/api/API/Validate?date=" + $("#txtDate")[0].value + "&employeeName=" + $("#txtFirstEmployee")[0].value + "&shiftType=" + $("#ddShift").attr('selected', 'selected')[0].value;
+                var urlString = "http://amigoshift.azurewebsites.net/api/API/Validate?date=" + $("#txtDate")[0].value + "&employeeName=" + $("#txtFirstEmployee")[0].value + "&shiftType=" + $("#ddShift").attr('selected', 'selected')[0].value;
                 $http.get(urlString)
                 .then(function successCallback(response) {
                     $scope.response = response.data;
@@ -250,7 +250,7 @@
             function apiCall(_key) {
                 $.ajax({
                     method: "GET",
-                    url: "http://localhost:28520/api/API/Validate?date=" + $("#txtDate")[0].value + "&employeeName=" + $("#txtFirstEmployee")[0].value + "&shiftType=" + $("#ddShift").attr('selected', 'selected')[0].value,
+                    url: "http://amigoshift.azurewebsites.net/api/API/Validate?date=" + $("#txtDate")[0].value + "&employeeName=" + $("#txtFirstEmployee")[0].value + "&shiftType=" + $("#ddShift").attr('selected', 'selected')[0].value,
                     success: function (data) {
                         //document.getElementById('cell' + i + '+' + j).value = response.replace(/"/g, "")
                         console.log(data);
@@ -291,7 +291,7 @@
             function deleteInstanceApiCall() {
                 $.ajax({
                     method: "GET",
-                    url: "http://localhost:28520/api/API/DeleteInstance",
+                    url: "http://amigoshift.azurewebsites.net/api/API/DeleteInstance",
                     success: function (data) {
                         //document.getElementById('cell' + i + '+' + j).value = response.replace(/"/g, "")
                         console.log(data);
